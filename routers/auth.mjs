@@ -1,7 +1,7 @@
 import express from "express";
+import { register } from "../../controllers/auth.mjs";
 
 const authRouter = express.Router();
-authRouter.get("/",(req,res)=>res.send("Auth home page"));
-authRouter.get("/register",(req,res)=>res.send("Auth register page"));
+authRouter.post("/register",register);
 
 export default authRouter;

@@ -1,8 +1,10 @@
 import express from 'express';
-import dotenv from 'dotenv';
+import dotenv from 'dotenv'
 import router from './routers/index.mjs';
+import { connectDb } from '../helpers/database/connectDb.mjs';
 
 dotenv.config();
+connectDb();
 const app = express();
 const PORT= process.env.PORT;
 const NODE_ENV= process.env.NODE_ENV;
