@@ -4,7 +4,7 @@ const sendJwtToClient = (user,res) => {
       return res.status(200).cookie("access_token",token,{
         httpOnly:true,
         expires:new Date(Date.now() + parseInt(JWT_COOKIE)*1000),
-        secure:JWT_COOKIE === "development" ? true : false
+        secure:NODE_ENV === "development" ? true : false
       }).json({
         success:true,
         access_token:token,
@@ -12,7 +12,15 @@ const sendJwtToClient = (user,res) => {
             name:user.name,
             email:user.email
         }
-
+        
       });
 }
-export {sendJwtToClient}
+const isTokenIncluded = req =>  req.headers.authorization &&  req.headers.authorization.startsWith("Bearer:");
+const getAccessTokenTokenFromHeader = (req) => {
+      const authorization = req.headers.authorization;
+      const access_token = authorization.split(" ")[1];
+      return access_token;
+}
+  
+
+export {sendJwtToClient,isTokenIncluded,getAccessTokenTokenFromHeader}
