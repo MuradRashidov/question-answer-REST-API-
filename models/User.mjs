@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import crypto from "crypto"
 
 const Schema = mongoose.Schema;
 
@@ -49,8 +50,28 @@ const UserSchema = new Schema({
     blocked:{
         type:Boolean,
         default:false
+    },
+    resetPasswordToken:{
+        type:String
+    },
+    resetPasswordExpire:{
+        type:Date
     }
 });
+UserSchema.methods.getResetPasswordTokenFromUser = function(){
+    const {RESET_PASSWORD_EXPIRE} = process.env;
+    const randomHexString = crypto.randomBytes(15).toString("hex");
+    console.log(randomHexString);
+    const resetPasswordToken = crypto
+    .createHash("SHA256")
+    .update(randomHexString)
+    .digest("hex")
+    //console.log(resetPasswordToken);
+    this.resetPasswordToken = resetPasswordToken;
+    this.resetPasswordExpire = Date.now() + parseInt(RESET_PASSWORD_EXPIRE);
+    return resetPasswordToken;
+
+}
 UserSchema.methods.generateJwtFromUser = function(){
     const {JWT_SECRET_KEY,JWT_EXPIRE} = process.env;
     const payload = {
@@ -63,7 +84,9 @@ UserSchema.methods.generateJwtFromUser = function(){
     return token;
 }
 UserSchema.pre("save",function(next){    
-    if(!this.isModified("password")) next();
+    if(!this.isModified("password")) {
+        return next()
+    };
     bcrypt.genSalt(10, (err, salt) =>{
         if(err) next(err);
         bcrypt.hash(this.password, salt, (err, hash)=> {

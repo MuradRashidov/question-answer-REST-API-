@@ -1,5 +1,5 @@
 import express from "express";
-import { getUser, imageUpload, logaut, login, register} from "../controllers/auth.mjs";
+import { forgetPassword, getUser, imageUpload, logaut, login, register, resetPassword} from "../controllers/auth.mjs";
 import { getAccessToRoute } from "../middlewares/authorization/auth.mjs";
 import { profileImageUpload } from "../middlewares/libraries/profileImageUpload.mjs";
 
@@ -10,5 +10,8 @@ authRouter.get("/error");
 authRouter.get("/profile",getAccessToRoute,getUser);
 authRouter.get("/logaut",getAccessToRoute,logaut);
 authRouter.post("/upload",[getAccessToRoute,profileImageUpload.single("profile_image")],imageUpload);
+authRouter.post("/forgetpassword",forgetPassword);
+authRouter.put("/resetpassword",resetPassword);
+
 
 export default authRouter;

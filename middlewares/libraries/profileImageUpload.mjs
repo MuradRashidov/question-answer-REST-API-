@@ -2,12 +2,13 @@ import multer from "multer";
 import CustomError from "../../helpers/error/CustomError.mjs";
 import { fileURLToPath } from 'url';
 import path from 'path';
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const storage = multer.diskStorage({
     destination: function(req,file,cb){
        //const rootDir = path.dirname(require.main.filename);
        //console.log(appDir)
-       cb(null,path.join(appDirname,"/public/uploads"))
+       cb(null,path.join(__dirname,"public","uploads"))
     },
     filename: function(req,file,cb){
         const extension = file.mimetype.split("/")[1];
