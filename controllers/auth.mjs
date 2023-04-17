@@ -25,7 +25,7 @@ const login = asyncErrorWrapper(async (req,res,next) => {
          return next(new CustomError("Inputlarını yoxla",400));
    }
    const user = await User.findOne({email}).select("+password");
-   console.log(comparePassword(password,user.password),"test")
+   //console.log(comparePassword(password,user.password),"test")
    if(!comparePassword(password,user.password)){
       return next(new CustomError("Email və ya şifrə yanlışdır",400));
    }
@@ -130,5 +130,20 @@ const resetPassword = asyncErrorWrapper(async (req,res,next) => {
             message:"Reset password process is successful"
          })
 })
+const editDetails = asyncErrorWrapper(async (req,res,next) => {
+      const editInformation = req.body;
+      const user = await User.findByIdAndUpdate(req.user.id,editInformation,{
+         new:true,
+         runValidators:true
+      })
+      return (
+         res
+         .status(200)
+         .json({
+            success:true,
+            data:user
+         })
+      )
+})
 
-export {register,getUser,login,logaut,imageUpload,forgetPassword,resetPassword}
+export {register,getUser,login,logaut,imageUpload,forgetPassword,resetPassword,editDetails}
