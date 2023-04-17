@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import crypto from "crypto"
+import Question from "./Question.mjs";
 
 const Schema = mongoose.Schema;
 
@@ -95,6 +96,14 @@ UserSchema.pre("save",function(next){
              next();
         });
     });
-})
+});
+UserSchema.post("deleteOne",async function(){
+    const filter = this.getFilter();
+
+  await Question.deleteMany({
+   user:filter._id
+  })
+  console.log(this.id)
+});
 
 export default mongoose.model("User",UserSchema);

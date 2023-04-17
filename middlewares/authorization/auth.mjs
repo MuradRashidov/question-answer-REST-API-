@@ -3,6 +3,7 @@ import CustomError from "../../helpers/error/CustomError.mjs";
 import expressAsyncWrapper from "express-async-wrapper";
 import jwt from "jsonwebtoken";
 import User from "../../models/User.mjs"
+import Question from "../../models/Question.mjs";
 const getAccessToRoute = (req,res,next) => {
 
     const {JWT_SECRET_KEY} = process.env;
@@ -31,8 +32,19 @@ const getAdminAccess = expressAsyncWrapper(async(req,res,next) => {
         return next(new CustomError("Only admin can access this route",403))
     }
     next();
-})
+});
+const getQuestionOwnerAccess = expressAsyncWrapper(async(req,res,next) => {
+    let userId = req.user.id;
+    let questionId = req.params.id;
+    
+    let question = await Question.findById(questionId);
+    if(question.user != userId){
+        return next(new CustomError("Only admin can handle this route",403));
+    }
+    next();
+});
 export {
     getAccessToRoute,
-    getAdminAccess
+    getAdminAccess,
+    getQuestionOwnerAccess
 };

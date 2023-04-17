@@ -7,5 +7,5 @@ import { checkUserExcist } from "../middlewares/databases/databaseErrorHelper.mj
 const adminRouter = express.Router();
 adminRouter.use([getAccessToRoute,getAdminAccess]);
 adminRouter.get("/block/:id",checkUserExcist,blockUser)
-adminRouter.get("/delete/:id",checkUserExcist,deleteUser)
+adminRouter.delete("/delete/:id",checkUserExcist,deleteUser)
 export default adminRouter;
