@@ -4,6 +4,7 @@ import expressAsyncWrapper from "express-async-wrapper";
 import jwt from "jsonwebtoken";
 import User from "../../models/User.mjs"
 import Question from "../../models/Question.mjs";
+import Answer from "../../models/Answer.mjs";
 const getAccessToRoute = (req,res,next) => {
 
     const {JWT_SECRET_KEY} = process.env;
@@ -43,8 +44,21 @@ const getQuestionOwnerAccess = expressAsyncWrapper(async(req,res,next) => {
     }
     next();
 });
+const getAnswerOwnerAccess = expressAsyncWrapper(async(req,res,next) => {
+    let userId = req.user.id;
+    let {answer_id} = req.params;
+    
+    let answer = await Answer.findById(answer_id);
+    console.log(answer)
+
+    if(answer.user != userId){
+        return next(new CustomError("Only admin can handle this route",403));
+    }
+    next();
+});
 export {
     getAccessToRoute,
     getAdminAccess,
-    getQuestionOwnerAccess
+    getQuestionOwnerAccess,
+    getAnswerOwnerAccess
 };

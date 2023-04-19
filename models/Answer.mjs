@@ -17,6 +17,7 @@ const AnswerSchema = new Schema({
         type:Date,
         default:Date.now()
     },
+    
     likes:[
         {
             type:mongoose.Schema.ObjectId,
@@ -45,6 +46,7 @@ AnswerSchema.pre("save",  async function(next){
   
     const question = await Question.findById(self.question);
     question.answers.push(self.id);
+    question.answerCount = question.answers.length
     await question.save();
     next()
   }
