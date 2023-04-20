@@ -3,9 +3,10 @@ const searchHelper = (searchKey,query,req) =>{
         const searchObject = {};
         const regex = new RegExp(req.query.search,"i");
         searchObject[searchKey]  = regex;
-        query = query.where(searchObject);
+        return query.where(searchObject);
         
    }
+        return query
 }
 
 const populateHelper = (query,population) => {
@@ -23,7 +24,7 @@ console.log(sortKey)
  } 
   return query.sort("-createAt"); 
 };
-const paginationHelper = async function(model,query,req){
+const paginationHelper = async (model,query,req) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 5;
   const startIndex = (page-1)*limit;
@@ -43,7 +44,7 @@ const paginationHelper = async function(model,query,req){
     };
 
 }
- return json({
+ return ({
     query:query.skip(startIndex).limit(limit),
     pagination:pagination
  });
