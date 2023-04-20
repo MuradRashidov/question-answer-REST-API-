@@ -1,6 +1,5 @@
 import expressAsyncWrapper from "express-async-wrapper";
 import Answer from "../models/Answer.mjs";
-import { json } from "express";
 import Question from "../models/Question.mjs";
 import CustomError from "../helpers/error/CustomError.mjs";
 
