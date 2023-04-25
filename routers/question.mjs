@@ -5,6 +5,7 @@ import { checkQuestionExcist } from "../middlewares/databases/databaseErrorHelpe
 import answerRouter from "./answer.mjs";
 import Question from "../models/Question.mjs";
 import { questionQueryMidleware } from "../middlewares/query/questionQueryMidleware.mjs";
+import { answerQueryMidleware } from "../middlewares/query/answerQueryMiddleware.mjs";
 
 const questionRouter = express.Router();
 questionRouter.get("/:id/like",[getAccessToRoute,checkQuestionExcist],likeQuestion);
@@ -15,7 +16,18 @@ questionRouter.get("/",questionQueryMidleware(Question,{
         select:"name profile_image"
     }
 }),getAllQuestions);
-questionRouter.get("/:id",checkQuestionExcist,getSinleQuestion);
+questionRouter.get("/:id",checkQuestionExcist,answerQueryMidleware(Question,{
+    population:[
+        {
+          path:"user",
+          select:"name profile_image"
+        },
+        {
+            path:"answers",
+            select:"content"
+          },
+    ]
+}),getSinleQuestion);
 questionRouter.post("/ask",getAccessToRoute,askNewQuestion);
 questionRouter.put("/:id/edit",[getAccessToRoute,checkQuestionExcist,getQuestionOwnerAccess],editQuestion);
 questionRouter.delete("/:id/delete",[getAccessToRoute,checkQuestionExcist,getQuestionOwnerAccess],deleteQuestion);

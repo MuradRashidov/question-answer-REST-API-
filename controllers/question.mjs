@@ -13,11 +13,10 @@ const getAllQuestions = expressAsyncWrapper(async(req,res,next) => {
 
 });
 const getSinleQuestion = expressAsyncWrapper(async(req,res,next) => {
-    let {id} = req.params
-    let question = await Question.findById(id);
+   
     res
     .status(200)
-    .json({success:true,data:question});
+    .json(res.queryResults);
 })
 
 const editQuestion = expressAsyncWrapper(async(req,res,next) => {
